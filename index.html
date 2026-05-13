@@ -1078,7 +1078,7 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
 
                     <div class="nav-btns">
                         <button class="nav-btn" onclick="goto(${current - 1})" ${current === 0 ? 'disabled' : ''}>← Previous</button>
-                        <button class="nav-btn primary" id="nextBtn" onclick="nextPillar()" ${!completed.has(current) ? 'disabled' : ''}>
+                        <button class="nav-btn primary" id="nextBtn" onclick="nextPillar()" ${(quizDone || completed.has(current)) ? '' : 'disabled'}>
                             ${current === pillars.length - 1 ? 'See Analysis 📈' : 'Continue →'}
                         </button>
                     </div>
@@ -1208,6 +1208,7 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                     <span class="correct-answer-hint">The correct answer is: ${q.opts[q.ans]}</span>
                 `;
                 stats[current].wrong++;
+                document.getElementById('nextBtn').disabled = false;
             }
             save();
             const pillBtns = document.querySelectorAll('.pill');
