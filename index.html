@@ -1000,9 +1000,9 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
             }
         ];
 
-        let current = parseInt(localStorage.getItem('java_dsa_current')) || 0;
-        let completed = new Set(JSON.parse(localStorage.getItem('java_dsa_completed')) || []);
-        let stats = JSON.parse(localStorage.getItem('java_dsa_stats')) || pillars.map(() => ({ correct: 0, wrong: 0, attempts: 0 }));
+        let current = 0;
+        let completed = new Set();
+        let stats = pillars.map(() => ({ correct: 0, wrong: 0, attempts: 0 }));
         let quizDone = false;
         let currentQuizIndex = 0;
         let currentView = 'step';
@@ -1210,7 +1210,6 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                 stats[current].wrong++;
                 document.getElementById('nextBtn').disabled = false;
             }
-            save();
             const pillBtns = document.querySelectorAll('.pill');
             if (pillBtns[current]) {
                 if (completed.has(current)) pillBtns[current].className = 'pill active completed';
@@ -1231,7 +1230,6 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
             current = i;
             quizDone = false;
             currentQuizIndex = Math.floor(Math.random() * pillars[i].quizzes.length);
-            save();
             render();
         }
 
@@ -1241,11 +1239,6 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
             if (progEl) progEl.style.width = progPercent + '%';
         }
 
-        function save() {
-            localStorage.setItem('java_dsa_current', current);
-            localStorage.setItem('java_dsa_completed', JSON.stringify([...completed]));
-            localStorage.setItem('java_dsa_stats', JSON.stringify(stats));
-        }
 
         function resetProgress() {
             if (confirm("Reset everything?")) {
