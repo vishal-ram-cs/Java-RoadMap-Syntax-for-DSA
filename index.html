@@ -416,7 +416,7 @@
             font-size: 0.95rem;
             display: none;
             animation: slideIn 0.3s ease-out;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         @keyframes slideIn {
@@ -426,6 +426,26 @@
 
         .feedback.ok { background: rgba(52, 211, 153, 0.05); color: var(--success); border: 1px solid rgba(52, 211, 153, 0.2); }
         .feedback.bad { background: rgba(251, 113, 133, 0.05); color: var(--error); border: 1px solid rgba(251, 113, 133, 0.2); }
+
+        .feedback-title {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .feedback-content {
+            display: block;
+        }
+
+        .correct-answer-hint {
+            display: block;
+            margin-top: 0.75rem;
+            font-weight: 600;
+            color: var(--success);
+        }
 
         /* Navigation Buttons */
         .nav-btns {
@@ -577,9 +597,39 @@
 <span class="kw">int</span> pos = ch - <span class="str">'a'</span>;    <span class="cm">// → 4</span>`,
                 tip: "The 'ch - 'a'' trick is the most common way to build frequency maps for anagram problems without using a full HashMap.",
                 quizzes: [
-                    { q: "What does 'c' - 'a' evaluate to?", opts: ["1", "2", "3", "67"], ans: 1, explain: "'a'=0, 'b'=1, 'c'=2." },
-                    { q: "Which type should you use for numbers exceeding 2 billion?", opts: ["int", "short", "long", "float"], ans: 2, explain: "int has a max value of ~2.1 billion. Use long for larger numbers." },
-                    { q: "What is the ASCII value of 'A'?", opts: ["65", "97", "48", "0"], ans: 0, explain: "'A' is 65, 'a' is 97." }
+                    { 
+                        q: "What does 'c' - 'a' evaluate to?", 
+                        opts: ["1", "2", "3", "67"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. 1 would be 'b' - 'a'. Remember that 'a' is 0 in 0-indexed positioning.",
+                            "Correct! 'a' is 0, 'b' is 1, and 'c' is 2. (99 - 97 = 2).",
+                            "Incorrect. 3 would be 'd' - 'a'. Counts start from 0.",
+                            "Incorrect. 67 is the ASCII value of 'C', but the subtraction 'c' - 'a' results in the relative offset."
+                        ]
+                    },
+                    { 
+                        q: "Which type should you use for numbers exceeding 2 billion?", 
+                        opts: ["int", "short", "long", "float"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. 'int' caps at ~2.14 billion. Numbers larger than this will overflow and wrap around to negative.",
+                            "Incorrect. 'short' is even smaller than 'int', capping at 32,767.",
+                            "Correct! 'long' is a 64-bit integer that can store extremely large values (up to 9 quintillion).",
+                            "Incorrect. 'float' is for decimals. For large whole numbers, 'long' is more precise and appropriate."
+                        ]
+                    },
+                    { 
+                        q: "What is the ASCII value of 'A'?", 
+                        opts: ["65", "97", "48", "0"], 
+                        ans: 0, 
+                        explains: [
+                            "Correct! 'A' starts at 65. Remember this for uppercase character logic.",
+                            "Incorrect. 97 is the ASCII value for lowercase 'a'.",
+                            "Incorrect. 48 is the ASCII value for the character '0'.",
+                            "Incorrect. 0 is the null character, not 'A'."
+                        ]
+                    }
                 ]
             },
             {
@@ -593,9 +643,39 @@
 Arrays.sort(arr);      <span class="cm">// O(n log n)</span>`,
                 tip: "Arrays.sort() for primitives uses Dual-Pivot Quicksort. It is not stable for primitives but very fast.",
                 quizzes: [
-                    { q: "How do you get array length?", opts: ["arr.size()", "arr.length", "arr.length()", "arr.count"], ans: 1, explain: "Arrays use .length (field)." },
-                    { q: "Which method fills an array with a value?", opts: ["Arrays.set()", "Arrays.fill()", "Arrays.put()", "Arrays.init()"], ans: 1, explain: "Arrays.fill(arr, val) is the standard method." },
-                    { q: "What is the time complexity of Arrays.sort()?", opts: ["O(N)", "O(N²)", "O(N log N)", "O(log N)"], ans: 2, explain: "It uses Quicksort/TimSort which are O(N log N)." }
+                    { 
+                        q: "How do you get array length?", 
+                        opts: ["arr.size()", "arr.length", "arr.length()", "arr.count"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. .size() is used for Collections like ArrayList, not for primitive arrays.",
+                            "Correct! Arrays use a public final field called 'length'.",
+                            "Incorrect. .length() is a method used for Strings, not arrays.",
+                            "Incorrect. 'count' is not a standard Java property for arrays."
+                        ]
+                    },
+                    { 
+                        q: "Which method fills an array with a value?", 
+                        opts: ["Arrays.set()", "Arrays.fill()", "Arrays.put()", "Arrays.init()"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. There is no standard Arrays.set() for bulk filling.",
+                            "Correct! Arrays.fill(arr, val) is the built-in way to populate an entire array.",
+                            "Incorrect. .put() is a Map method.",
+                            "Incorrect. .init() is not a method in the Arrays utility class."
+                        ]
+                    },
+                    { 
+                        q: "What is the time complexity of Arrays.sort()?", 
+                        opts: ["O(N)", "O(N²)", "O(N log N)", "O(log N)"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. O(N) is only possible for specialized sorts like Counting Sort.",
+                            "Incorrect. O(N²) is the worst case for simple quicksort, but Java uses optimized versions that average O(N log N).",
+                            "Correct! Java's dual-pivot quicksort and TimSort both guarantee O(N log N) performance.",
+                            "Incorrect. O(log N) is for searching in a sorted array, not for sorting a raw one."
+                        ]
+                    }
                 ]
             },
             {
@@ -610,9 +690,39 @@ StringBuilder sb = <span class="kw">new</span> StringBuilder();
 sb.append(<span class="str">"xyz"</span>).reverse();`,
                 tip: "Never use '==' for String comparison. It compares memory references, not the actual text.",
                 quizzes: [
-                    { q: "What does s.substring(1, 3) return for 'hello'?", opts: ["'el'", "'ell'", "'he'", "'hel'"], ans: 0, explain: "End index is exclusive. Indices 1 and 2 are 'e' and 'l'." },
-                    { q: "Which is more efficient for joining 1000 strings?", opts: ["String +", "StringBuilder", "StringBuffer", "String.concat()"], ans: 1, explain: "StringBuilder is non-synchronized and much faster than repeated '+' operations." },
-                    { q: "How to compare String values?", opts: ["s1 == s2", "s1.is(s2)", "s1.equals(s2)", "s1 === s2"], ans: 2, explain: ".equals() checks value equality." }
+                    { 
+                        q: "What does s.substring(1, 3) return for 'hello'?", 
+                        opts: ["'el'", "'ell'", "'he'", "'hel'"], 
+                        ans: 0, 
+                        explains: [
+                            "Correct! Indices 1 ('e') and 2 ('l') are included. Index 3 ('l') is the exclusive end.",
+                            "Incorrect. The end index in substring(start, end) is exclusive, so it only takes up to index 2.",
+                            "Incorrect. 'he' would be indices 0 and 1. Indices 1 to 3 start at 'e'.",
+                            "Incorrect. 'hel' would be substring(0, 3)."
+                        ]
+                    },
+                    { 
+                        q: "Which is more efficient for joining 1000 strings?", 
+                        opts: ["String +", "StringBuilder", "StringBuffer", "String.concat()"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. Each '+' creates a new String object and copies all previous characters, resulting in O(N²) time.",
+                            "Correct! StringBuilder uses a mutable internal buffer, making appends O(1) amortized.",
+                            "Incorrect. StringBuffer is synchronized (thread-safe), which makes it slower than StringBuilder for single-threaded loops.",
+                            "Incorrect. .concat() has the same immutability issues as the '+' operator."
+                        ]
+                    },
+                    { 
+                        q: "How to compare String values?", 
+                        opts: ["s1 == s2", "s1.is(s2)", "s1.equals(s2)", "s1 === s2"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. '==' checks if they point to the same memory location, which fails if the strings were created differently.",
+                            "Incorrect. There is no .is() method for strings in Java.",
+                            "Correct! .equals() compares the actual character sequences inside the strings.",
+                            "Incorrect. '===' is a JavaScript operator; it does not exist in Java."
+                        ]
+                    }
                 ]
             },
             {
@@ -626,9 +736,39 @@ Map&lt;String, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
 map.put(x, map.getOrDefault(x, <span class="num">0</span>) + <span class="num">1</span>);`,
                 tip: "getOrDefault() is the most powerful method for frequency counting. Use it to avoid 'if contains' checks.",
                 quizzes: [
-                    { q: "Which Map method handles missing keys cleanly?", opts: ["get()", "fetch()", "getOrDefault()", "find()"], ans: 2, explain: "getOrDefault(key, default) returns default if key is missing." },
-                    { q: "Average complexity of HashMap.get()?", opts: ["O(1)", "O(N)", "O(log N)", "O(N log N)"], ans: 0, explain: "Hashing provides constant time lookup on average." },
-                    { q: "Which list method adds an element?", opts: ["put()", "insert()", "add()", "push()"], ans: 2, explain: "ArrayList uses .add()." }
+                    { 
+                        q: "Which Map method handles missing keys cleanly?", 
+                        opts: ["get()", "fetch()", "getOrDefault()", "find()"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. .get() returns null if the key is missing, which can cause NullPointerExceptions.",
+                            "Incorrect. .fetch() is not a Map method.",
+                            "Correct! .getOrDefault(key, fallback) returns the value if present, or the fallback if missing.",
+                            "Incorrect. .find() is not a Map method."
+                        ]
+                    },
+                    { 
+                        q: "Average complexity of HashMap.get()?", 
+                        opts: ["O(1)", "O(N)", "O(log N)", "O(N log N)"], 
+                        ans: 0, 
+                        explains: [
+                            "Correct! Hashing allows direct access to the bucket, making it constant time on average.",
+                            "Incorrect. O(N) only happens in the rare worst case of extreme hash collisions.",
+                            "Incorrect. O(log N) is for TreeMaps, not HashMaps.",
+                            "Incorrect. O(N log N) is for sorting, not map lookup."
+                        ]
+                    },
+                    { 
+                        q: "Which list method adds an element?", 
+                        opts: ["put()", "insert()", "add()", "push()"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. .put() is for Maps.",
+                            "Incorrect. .insert() is not a standard List method (it's .add(index, value)).",
+                            "Correct! .add(element) is the standard way to append to an ArrayList.",
+                            "Incorrect. .push() is for Stacks/Deques."
+                        ]
+                    }
                 ]
             },
             {
@@ -643,9 +783,39 @@ dq.offer(<span class="num">1</span>); <span class="cm">// Queue (FIFO)</span>
 PriorityQueue&lt;Integer&gt; pq = <span class="kw">new</span> PriorityQueue&lt;&gt;();`,
                 tip: "Avoid the 'Stack' class; it is synchronized and legacy. Always use ArrayDeque for stack operations.",
                 quizzes: [
-                    { q: "Which class should you use for a Stack?", opts: ["Stack", "ArrayList", "ArrayDeque", "LinkedList"], ans: 2, explain: "ArrayDeque is faster and the modern standard for Stacks." },
-                    { q: "Default PriorityQueue order?", opts: ["Random", "Descending", "Ascending (Min-Heap)", "LIFO"], ans: 2, explain: "By default, it is a Min-Heap (smallest element at top)." },
-                    { q: "Queue method to remove front?", opts: ["pop()", "poll()", "remove()", "extract()"], ans: 1, explain: "poll() returns null if empty, whereas remove() throws exception." }
+                    { 
+                        q: "Which class should you use for a Stack?", 
+                        opts: ["Stack", "ArrayList", "ArrayDeque", "LinkedList"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. While 'Stack' exists, it is a legacy class that is synchronized (slow).",
+                            "Incorrect. ArrayList doesn't provide stack-specific methods like .push() or .pop().",
+                            "Correct! ArrayDeque is the modern, non-synchronized, and faster implementation for stacks.",
+                            "Incorrect. LinkedList can be used but is generally slower due to node object overhead."
+                        ]
+                    },
+                    { 
+                        q: "Default PriorityQueue order?", 
+                        opts: ["Random", "Descending", "Ascending (Min-Heap)", "LIFO"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. It is strictly ordered by priority.",
+                            "Incorrect. To get descending (Max-Heap), you must provide Collections.reverseOrder().",
+                            "Correct! By default, the smallest element is kept at the top (Min-Heap).",
+                            "Incorrect. LIFO is for Stacks."
+                        ]
+                    },
+                    { 
+                        q: "Queue method to remove front?", 
+                        opts: ["pop()", "poll()", "remove()", "extract()"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. .pop() is a Stack method.",
+                            "Correct! .poll() retrieves and removes the head, returning null if empty.",
+                            "Incorrect. .remove() works but throws an exception if the queue is empty, which is riskier.",
+                            "Incorrect. .extract() is not a Queue method."
+                        ]
+                    }
                 ]
             },
             {
@@ -658,9 +828,39 @@ PriorityQueue&lt;Integer&gt; pq = <span class="kw">new</span> PriorityQueue&lt;&
 Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                 tip: "Use Integer.compare(a, b) instead of a - b to safely handle large values and prevent overflow.",
                 quizzes: [
-                    { q: "What does (a, b) -> b - a do?", opts: ["Ascending Sort", "Descending Sort", "No Sort", "Errors out"], ans: 1, explain: "b - a reverses the standard order." },
-                    { q: "How to sort a list of objects?", opts: ["list.sort()", "Arrays.sort(list)", "Collections.sort(list)", "list.orderBy()"], ans: 2, explain: "Collections.sort() is the standard utility for Lists." },
-                    { q: "What happens if a comparator returns 0?", opts: ["Error", "Elements are equal", "First is smaller", "Infinite Loop"], ans: 1, explain: "0 means the elements are considered equal in ranking." }
+                    { 
+                        q: "What does (a, b) -> b - a do?", 
+                        opts: ["Ascending Sort", "Descending Sort", "No Sort", "Errors out"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. (a - b) is the standard for Ascending.",
+                            "Correct! Reversing the subtraction (b - a) flips the comparison logic to Descending.",
+                            "Incorrect. It definitely sorts.",
+                            "Incorrect. This is valid lambda syntax in Java."
+                        ]
+                    },
+                    { 
+                        q: "How to sort a list of objects?", 
+                        opts: ["list.sort()", "Arrays.sort(list)", "Collections.sort(list)", "list.orderBy()"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. While list.sort() exists since Java 8, Collections.sort() is the traditional utility method most developers use.",
+                            "Incorrect. Arrays.sort() is for fixed-size arrays, not Lists.",
+                            "Correct! Collections.sort() is the standard utility for sorting any List implementation.",
+                            "Incorrect. .orderBy() is a SQL/LINQ term, not a Java Collection method."
+                        ]
+                    },
+                    { 
+                        q: "What happens if a comparator returns 0?", 
+                        opts: ["Error", "Elements are equal", "First is smaller", "Infinite Loop"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. Returning 0 is perfectly valid.",
+                            "Correct! 0 signals to the sort algorithm that both elements have equal rank.",
+                            "Incorrect. A negative value signals the first is smaller.",
+                            "Incorrect. Sorting algorithms handle equality gracefully."
+                        ]
+                    }
                 ]
             },
             {
@@ -673,9 +873,39 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
 <span class="kw">if</span> (memo[n] != <span class="num">0</span>) <span class="kw">return</span> memo[n]; <span class="cm">// Memo check</span>`,
                 tip: "Memoization turns exponential time O(2^N) into linear time O(N) by storing results of subproblems.",
                 quizzes: [
-                    { q: "What happens without a base case?", opts: ["Infinite loop", "StackOverflowError", "MemoryLeak", "NullPointer"], ans: 1, explain: "Recursion depth fills the stack until it overflows." },
-                    { q: "What is Memoization?", opts: ["Looping", "Sorting", "Caching results", "Deleting data"], ans: 2, explain: "Caching results of expensive function calls." },
-                    { q: "Recursion is usually replaced by what?", opts: ["Sorting", "Iteration", "Hashing", "Inheritance"], ans: 1, explain: "Iteration (loops) can often replace recursion to save stack space." }
+                    { 
+                        q: "What happens without a base case?", 
+                        opts: ["Infinite loop", "StackOverflowError", "MemoryLeak", "NullPointer"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. In recursion, it's not a loop, but a series of function calls on the stack.",
+                            "Correct! Each call adds a frame to the stack. Without a stop condition, it exceeds memory limits.",
+                            "Incorrect. Memory leaks are different from stack exhaustion.",
+                            "Incorrect. This only happens if you try to access a null object."
+                        ]
+                    },
+                    { 
+                        q: "What is Memoization?", 
+                        opts: ["Looping", "Sorting", "Caching results", "Deleting data"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. Looping is iteration.",
+                            "Incorrect. Sorting is unrelated.",
+                            "Correct! It involves storing the results of expensive function calls to avoid repeating them.",
+                            "Incorrect. It's the opposite—it's about keeping data."
+                        ]
+                    },
+                    { 
+                        q: "Recursion is usually replaced by what?", 
+                        opts: ["Sorting", "Iteration", "Hashing", "Inheritance"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. Sorting doesn't replace the logic flow of recursion.",
+                            "Correct! Standard loops (for/while) can replace recursion to avoid stack overhead.",
+                            "Incorrect. Hashing is for lookups.",
+                            "Incorrect. Inheritance is an OOP concept."
+                        ]
+                    }
                 ]
             },
             {
@@ -688,9 +918,39 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
 <span class="kw">int</span> mid = low + (high - low) / <span class="num">2</span>; <span class="cm">// safe mid</span>`,
                 tip: "Use 'low + (high - low) / 2' instead of '(low + high) / 2' to prevent integer overflow for large indices.",
                 quizzes: [
-                    { q: "Result of 5 ^ 5?", opts: ["10", "25", "0", "1"], ans: 2, explain: "XOR with self is always 0." },
-                    { q: "How to check if n is even using bits?", opts: ["n % 2 == 0", "n & 1 == 0", "n | 1 == 0", "n ^ 1 == 0"], ans: 1, explain: "If the last bit is 0, the number is even." },
-                    { q: "What is Integer.MAX_VALUE + 1?", opts: ["Error", "Infinity", "Integer.MIN_VALUE", "0"], ans: 2, explain: "Integers wrap around in Java." }
+                    { 
+                        q: "Result of 5 ^ 5?", 
+                        opts: ["10", "25", "0", "1"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. XOR is not addition.",
+                            "Incorrect. XOR is not multiplication.",
+                            "Correct! Any bit XORed with itself is 0, so any number XORed with itself is 0.",
+                            "Incorrect. 1 would be the result of a bitwise check if odd."
+                        ]
+                    },
+                    { 
+                        q: "How to check if n is even using bits?", 
+                        opts: ["n % 2 == 0", "n & 1 == 0", "n | 1 == 0", "n ^ 1 == 0"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. This is mathematically correct but uses the modulo operator, not bitwise logic.",
+                            "Correct! If the least significant bit (binary 1) is 0, the number must be even.",
+                            "Incorrect. Bitwise OR with 1 would force the number to be odd.",
+                            "Incorrect. Bitwise XOR flips the last bit, it doesn't check it."
+                        ]
+                    },
+                    { 
+                        q: "What is Integer.MAX_VALUE + 1?", 
+                        opts: ["Error", "Infinity", "Integer.MIN_VALUE", "0"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. Java does not throw an error on integer overflow.",
+                            "Incorrect. Integers are finite; they don't reach infinity, they wrap.",
+                            "Correct! Due to two's complement representation, exceeding the max positive value wraps to the max negative.",
+                            "Incorrect. It doesn't reset to zero unless the specific binary carry allows it."
+                        ]
+                    }
                 ]
             },
             {
@@ -703,9 +963,39 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
 <span class="kw">return new int</span>[<span class="num">0</span>]; <span class="cm">// empty array return</span>`,
                 tip: "Always prefer returning an empty collection (Collections.emptyList()) rather than null to avoid NullPointerExceptions.",
                 quizzes: [
-                    { q: "Better return for no results?", opts: ["null", "new ArrayList()", "Collections.emptyList()", "-1"], ans: 2, explain: "emptyList() is memory efficient and prevents NPEs." },
-                    { q: "How to return a 1D array on the fly?", opts: ["return {1,2}", "return new int[]{1,2}", "return int[2]{1,2}", "return [1,2]"], ans: 1, explain: "Syntax for anonymous array return." },
-                    { q: "Type for nested list results?", opts: ["List[]", "List<List<T>>", "Matrix<T>", "ArrayList<IntArray>"], ans: 1, explain: "Standard way to return levels or permutations." }
+                    { 
+                        q: "Better return for no results?", 
+                        opts: ["null", "new ArrayList()", "Collections.emptyList()", "-1"], 
+                        ans: 2, 
+                        explains: [
+                            "Incorrect. Returning null forces the caller to do a null-check, or risk a crash.",
+                            "Incorrect. Creating a new ArrayList object consumes memory unnecessarily if it's going to stay empty.",
+                            "Correct! It returns a reusable, immutable empty list object—saving memory and avoiding null checks.",
+                            "Incorrect. -1 is a sentinel for primitive 'int', not for collection returns."
+                        ]
+                    },
+                    { 
+                        q: "How to return a 1D array on the fly?", 
+                        opts: ["return {1,2}", "return new int[]{1,2}", "return int[2]{1,2}", "return [1,2]"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. Bare curly braces are only for variable initialization.",
+                            "Correct! This is the syntax for creating an 'anonymous' array for an immediate return.",
+                            "Incorrect. You cannot specify size and values in that specific way.",
+                            "Incorrect. This is JavaScript syntax."
+                        ]
+                    },
+                    { 
+                        q: "Type for nested list results?", 
+                        opts: ["List[]", "List<List<T>>", "Matrix<T>", "ArrayList<IntArray>"], 
+                        ans: 1, 
+                        explains: [
+                            "Incorrect. An array of lists is different and less flexible than a nested list.",
+                            "Correct! This is the standard way to return structures like level-order tree traversals or permutations.",
+                            "Incorrect. Matrix is not a built-in Java Collection type.",
+                            "Incorrect. IntArray is not a standard Java class (unless using specialized libraries)."
+                        ]
+                    }
                 ]
             }
         ];
@@ -750,9 +1040,6 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
 
         function renderStep(main) {
             const p = pillars[current];
-            quizDone = false;
-            // Pick a random quiz index each time we enter this pillar
-            currentQuizIndex = Math.floor(Math.random() * p.quizzes.length);
             const q = p.quizzes[currentQuizIndex];
 
             updateProgress();
@@ -760,7 +1047,6 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
             document.getElementById('pillNav').innerHTML = pillars.map((x, i) => {
                 let statusClass = '';
                 if (completed.has(i)) statusClass = 'completed';
-                // Mark as struggling if wrong > correct and attempts > 0
                 if (stats[i].attempts > 0 && stats[i].wrong > stats[i].correct) statusClass = 'struggling';
                 
                 return `
@@ -787,7 +1073,7 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                         <div class="quiz-options">
                             ${q.opts.map((o, i) => `<button class="quiz-opt" onclick="answer(${i}, this)">${o}</button>`).join('')}
                         </div>
-                        <div id="feedback" class="feedback"></div>
+                        <div id="feedback" class="feedback" style="display: ${quizDone ? 'block' : 'none'}"></div>
                     </div>
 
                     <div class="nav-btns">
@@ -797,6 +1083,17 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                         </button>
                     </div>
                 </div>`;
+            
+            if (quizDone) {
+                 const fb = document.getElementById('feedback');
+                 const opts = document.querySelectorAll('.quiz-opt');
+                 opts[q.ans].classList.add('correct');
+                 fb.className = 'feedback ok';
+                 fb.innerHTML = `
+                    <span class="feedback-title">Correct!</span>
+                    <span class="feedback-content">${q.explains[q.ans]}</span>
+                `;
+            }
         }
 
         function renderCheatSheet(main) {
@@ -892,7 +1189,10 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
             if (i === q.ans) {
                 el.classList.add('correct');
                 fb.className = 'feedback ok';
-                fb.innerHTML = `<strong>Correct!</strong> ${q.explain}`;
+                fb.innerHTML = `
+                    <span class="feedback-title">Correct!</span>
+                    <span class="feedback-content">${q.explains[i]}</span>
+                `;
                 completed.add(current);
                 stats[current].correct++;
                 if (completed.size === pillars.length) triggerConfetti();
@@ -902,12 +1202,19 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
                 el.classList.add('wrong');
                 opts[q.ans].classList.add('correct');
                 fb.className = 'feedback bad';
-                fb.innerHTML = `<strong>Not quite.</strong> ${q.explain}`;
+                fb.innerHTML = `
+                    <span class="feedback-title">Not Quite</span>
+                    <span class="feedback-content">${q.explains[i]}</span>
+                    <span class="correct-answer-hint">The correct answer is: ${q.opts[q.ans]}</span>
+                `;
                 stats[current].wrong++;
             }
             save();
-            // Re-render nav pills to update struggle/complete status
-            goto(current);
+            const pillBtns = document.querySelectorAll('.pill');
+            if (pillBtns[current]) {
+                if (completed.has(current)) pillBtns[current].className = 'pill active completed';
+                else if (stats[current].wrong > stats[current].correct) pillBtns[current].className = 'pill active struggling';
+            }
         }
 
         function nextPillar() {
@@ -921,13 +1228,16 @@ Collections.sort(list, (a, b) -> b - a); <span class="cm">// Descending</span>`,
         function goto(i) {
             if (i < 0 || i >= pillars.length) return;
             current = i;
+            quizDone = false;
+            currentQuizIndex = Math.floor(Math.random() * pillars[i].quizzes.length);
             save();
             render();
         }
 
         function updateProgress() {
             const progPercent = (completed.size / pillars.length) * 100;
-            document.getElementById('prog').style.width = progPercent + '%';
+            const progEl = document.getElementById('prog');
+            if (progEl) progEl.style.width = progPercent + '%';
         }
 
         function save() {
